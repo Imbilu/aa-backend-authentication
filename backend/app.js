@@ -15,25 +15,31 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 
+
 if (!isProduction) {
     // enable cors only in development
     app.use(cors());
-  }
+}
   
-  // helmet helps set a variety of headers to better secure app
-  app.use(
-    helmet.crossOriginResourcePolicy({ 
-      policy: "cross-origin" 
-    })
-  );
-  
-  // Set the _csrf token and create req.csrfToken method
-  app.use(
-    csurf({
-      cookie: {
+// helmet helps set a variety of headers to better secure app
+app.use(
+helmet.crossOriginResourcePolicy({ 
+    policy: "cross-origin" 
+})
+);
+
+// Set the _csrf token and create req.csrfToken method
+app.use(
+csurf({
+    cookie: {
         secure: isProduction,
         sameSite: isProduction && "Lax",
         httpOnly: true
-      }
+    }
     })
-  );
+);
+
+const routes = require('./routes');
+app.use(routes);
+
+module.exports = app;
